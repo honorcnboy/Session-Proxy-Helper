@@ -312,7 +312,7 @@ esac
 source ~/.bashrc
 ```
 
-把 ~/.proxy_helper.sh 文件保存在 /root 路径，并赋权 755
+把 proxy_helper.sh 文件保存在 /root 路径，并赋权 755
 
 完成安装。
 
