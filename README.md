@@ -10,7 +10,7 @@
 
 ## 项目介绍
 
-`Proxy Helper` 是一个专门为 Linux 服务器设计的 Bash 工具。
+`Session Proxy Helper` 是一个专门为 Linux 服务器设计的 Bash 工具。
 
 很多用户都会遇到这样的情况：
 
@@ -19,7 +19,7 @@
 - 不希望永久修改系统代理；
 - 更不希望影响其它 SSH 会话、Cron、Systemd 服务或 Docker。
 
-因此诞生了 Proxy Helper。
+因此诞生了 Session Proxy Helper。
 
 它不会修改系统配置，不会修改 apt、Git、Docker 等配置文件，而是仅在**当前 SSH 会话(Session)**中动态启用或关闭代理。
 
@@ -55,7 +55,7 @@
 
 ## 工作原理
 
-Proxy Helper 本质上只是设置当前 Shell 的环境变量：
+Session Proxy Helper 本质上只是设置当前 Shell 的环境变量：
 
 ```text
 HTTP_PROXY
@@ -139,14 +139,19 @@ SSH 登录后自动显示：
 ┌────────────────────────────────────────────────────────────┐
 │                  Debian Proxy Helper                       │
 ├────────────────────────────────────────────────────────────┤
-│ Proxy Server : 192.168.123.16:10808                       │
-│ V2rayN       : ● Online                                   │
-│ Proxy        : ○ OFF                                      │
+│ Proxy Server : 192.168.123.16:10808                        │
+│ V2rayN       : ● Online                                    │
 ├────────────────────────────────────────────────────────────┤
 │ 外网连接：proxyon                                          │
-│ 正常连接：proxyoff                                         │
+│ 正常直连：proxyoff                                         │
 │ 当前设置仅对本 SSH 会话生效                                │
+├────────────────────────────────────────────────────────────┤
+│ proxyshow  proxytest  proxytoggle                          │
+│ myip       ghtest    proxyhelp                             │
+├────────────────────────────────────────────────────────────┤
+│ *配置文件：~/.bashrc  ~/.proxy_helper.sh                   │
 └────────────────────────────────────────────────────────────┘
+
 ```
 
 无需输入任何命令即可知道：
@@ -203,7 +208,7 @@ proxyoff
 
 ## Session 级代理
 
-Proxy Helper 最大的特点：
+Session Proxy Helper 最大的特点：
 
 **代理只对当前 SSH 会话有效。**
 
@@ -302,13 +307,21 @@ PROXY_PORT="10808"
 添加：
 
 ```bash
-source ~/.proxy_helper.sh
+# Session Proxy Helper 配置文件
+if [ -f "$HOME/.proxy_helper.sh" ]; then
+    source "$HOME/.proxy_helper.sh"
+fi
 
+# 登录 Shell 时显示 Banner
+# 非交互 Shell（例如 scp、rsync、cron）不会显示
 case "$-" in
     *i*)
-        proxy_banner
+        if type proxy_banner >/dev/null 2>&1; then
+            proxy_banner
+        fi
     ;;
 esac
+
 ```
 
 保存后：
@@ -316,6 +329,8 @@ esac
 ```bash
 source ~/.bashrc
 ```
+
+把 ~/.proxy_helper.sh 文件保存在 /root 路径，并赋权 755
 
 完成安装。
 
@@ -344,21 +359,6 @@ source ~/.proxy_helper.sh
 即可。
 
 不会留下任何系统配置。
-
----
-
-## 未来计划
-
-- [ ] 自动获取公网出口 IP
-- [ ] GitHub 连通性检测
-- [ ] Docker Hub 连通性检测
-- [ ] Google 连通性检测
-- [ ] 彩色 Banner
-- [ ] 多代理配置
-- [ ] proxyuse 命令
-- [ ] 配置文件分离
-- [ ] 自动更新
-- [ ] 日志功能
 
 ---
 
