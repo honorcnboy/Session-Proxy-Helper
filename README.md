@@ -272,6 +272,10 @@ proxyoff
 ```bash
 PROXY_HOST="192.168.123.16"
 PROXY_PORT="10808"
+
+# 可选认证（留空表示无需认证）
+PROXY_USERNAME=""
+PROXY_PASSWORD=""
 ```
 
 即可。
