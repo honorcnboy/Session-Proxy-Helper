@@ -341,13 +341,7 @@ source ~/.bashrc
 ~/.bashrc
 ```
 
-中的：
-
-```bash
-source ~/.proxy_helper.sh
-```
-
-即可。
+中的 Session Proxy Helper 部分即可。
 
 不会留下任何系统配置。
 
