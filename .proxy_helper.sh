@@ -1,14 +1,24 @@
 #!/usr/bin/env bash
 # ==========================================================
-# Proxy Helper v2.0
+# Proxy Helper v3.0
 # 配合 ~/.bashrc 文件，自动生效
 # ==========================================================
 
 PROXY_HOST="192.168.123.16"
 PROXY_PORT="10808"
 
-PROXY_HTTP="http://${PROXY_HOST}:${PROXY_PORT}"
-PROXY_SOCKS="socks5h://${PROXY_HOST}:${PROXY_PORT}"
+# 可选认证（留空表示无需认证）
+PROXY_USERNAME=""
+PROXY_PASSWORD=""
+
+if [ -n "$PROXY_USERNAME" ] || [ -n "$PROXY_PASSWORD" ]; then
+    PROXY_AUTH="${PROXY_USERNAME}:${PROXY_PASSWORD}@"
+else
+    PROXY_AUTH=""
+fi
+
+PROXY_HTTP="http://${PROXY_AUTH}${PROXY_HOST}:${PROXY_PORT}"
+PROXY_SOCKS="socks5h://${PROXY_AUTH}${PROXY_HOST}:${PROXY_PORT}"
 
 _green(){ printf "\033[32m%s\033[0m\n" "$1"; }
 _red(){ printf "\033[31m%s\033[0m\n" "$1"; }
