@@ -326,7 +326,9 @@ source ~/.bashrc
 .proxy_helper.sh 
 ```
 保存在 /root 路径，并赋权 755
-
+```bash
+chmod 755 ~/.proxy_helper.sh
+```
 完成安装。
 
 ---
