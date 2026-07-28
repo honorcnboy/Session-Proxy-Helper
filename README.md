@@ -10,7 +10,7 @@
 
 ## 项目介绍
 
-`Session Proxy Helper` 是一个专门为 Linux 服务器设计的 Bash 工具。
+`Session Proxy Helper` 是一个专门为无法正常访问国外网站的 Linux 服务器设计的 Bash 工具。
 
 很多用户都会遇到这样的情况：
 
