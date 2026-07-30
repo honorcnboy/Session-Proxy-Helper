@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==========================================================
-# Session Proxy Helper v3.0
+# Session Proxy Helper v5.1
 # 配合 ~/.bashrc 文件，自动生效
 # ==========================================================
 
@@ -11,8 +11,43 @@ PROXY_PORT="10808"
 PROXY_USERNAME=""
 PROXY_PASSWORD=""
 
-if [ -n "$PROXY_USERNAME" ] || [ -n "$PROXY_PASSWORD" ]; then
-    PROXY_AUTH="${PROXY_USERNAME}:${PROXY_PASSWORD}@"
+# URL Encode（无需外部依赖，自动处理用户名/密码中的特殊字符）
+urlencode() {
+    local str="$1"
+    local out=""
+    local c
+    local i
+
+    for ((i=0; i<${#str}; i++)); do
+        c="${str:i:1}"
+        case "$c" in
+            [a-zA-Z0-9.~_-])
+                out+="$c"
+                ;;
+            *)
+                printf -v c '%%%02X' "'$c"
+                out+="$c"
+                ;;
+        esac
+    done
+
+    printf '%s' "$out"
+}
+
+if [ -n "$PROXY_PASSWORD" ] && [ -z "$PROXY_USERNAME" ]; then
+    _red "Error: PROXY_PASSWORD is set but PROXY_USERNAME is empty."
+    return 1 2>/dev/null || exit 1
+fi
+
+if [ -n "$PROXY_USERNAME" ]; then
+    ENCODED_USERNAME="$(urlencode "$PROXY_USERNAME")"
+
+    if [ -n "$PROXY_PASSWORD" ]; then
+        ENCODED_PASSWORD="$(urlencode "$PROXY_PASSWORD")"
+        PROXY_AUTH="${ENCODED_USERNAME}:${ENCODED_PASSWORD}@"
+    else
+        PROXY_AUTH="${ENCODED_USERNAME}@"
+    fi
 else
     PROXY_AUTH=""
 fi
